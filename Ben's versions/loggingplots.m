@@ -19,9 +19,15 @@ end
 % creating labels
 labels = cellstr(num2str((1:size(SUBJECTS{1,1}.size,2))', 'tb=%-d'));
 
+% creating reference line for plots
+ref_x = linspace(1,10^3);
+ref = ref_x.^(-1.5);
+
 % Finally plotting
 figure('Name','Group Probability of Avalanche by Size, log-log');
 loglog(PLOTS.Ps);
+hold on 
+plot(ref_x,ref,'-b')
 title('Group Probability of Avalanche by Size, log-log')
 xlabel('Avalanch Size')
 ylabel('Probability')
@@ -29,6 +35,8 @@ legend(labels)
 
 figure('Name','Group Probability of Avalanche by Length, log-log');
 loglog(PLOTS.Pl);
+hold on 
+plot(ref_x,ref,'-b')
 title('Group Probability of Avalanche by Length, log-log')
 xlabel('Avalanch Length')
 ylabel('Probability')
@@ -36,6 +44,8 @@ legend(labels)
 
 figure('Name','Group Probability of Avalanche sizes by Length, log-log');
 loglog(PLOTS.Psl)
+hold on 
+plot(ref_x,ref,'-b')
 title('Group Distribution of Avalanche Sizes by Length, log-log')
 xlabel('Avalanch Size')
 ylabel('Avalanch Length')
@@ -44,6 +54,8 @@ legend(labels)
 figure('Name','Group Probability of Inter-Avalanch-Interval by Length , log-log');
 title('Group Probability of Inter-Avalanch-Interval by Length , log-log')
 loglog(PLOTS.Pi)
+hold on
+plot(ref_x,ref,'-b')
 xlabel('Interval Length')
 ylabel('Probability')
 legend(labels)
@@ -52,7 +64,7 @@ legend(labels)
 figure('Name','Group Alpha values per Time-Bin size');
 plot(PLOTS.alphas)
 hold on
-refline(0,-1.5,'-g') % refeence for wanted alpha value
+refline(0,1.5) % reference for wanted alpha value
 title('Group Alpha values per Time-Bin size')
 xlabel('Time-Bin Size')
 ylabel('Alpha value')
@@ -83,3 +95,4 @@ for i = 1:N % looping over tb sizes
     temp_i = sum(A,2);
     P(1,i,:) = full(temp_i./sum(temp_i));
 end
+

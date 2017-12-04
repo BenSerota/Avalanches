@@ -64,7 +64,10 @@ end
 av_sigma = cellfun(@(x,y) mean(y./x),frst,scnd);
 
 % BEN ADDED
-alphas = cellfun(@(x) pl2find_ML(x),av_size);
+alphas = cellfun(@(x) pl2find_ML(x),av_size); %TODO: is this right?? 
+% A. is this missing a minus? values tend to be between .5-2 .
+% B.should I not calculate this regarding each form of avalanch? 
+%i.e. for each size/length/iai/sizeXlength ?
 
 %into a structure
 BIG5.alphas = mean(alphas,1);
@@ -92,10 +95,10 @@ if ~thresh(1)
         msk = ts > sum(thresh);
     elseif pos == 2
         k = round(l*0.995);
-        thresh(1) = dstrb(k);
+        thresh(1) = dstrb(k); % print this 
         msk = ts > sum(thresh);
         k2 = round(l*0.005);
-        thresh2 = dstrb(k2);
+        thresh2 = dstrb(k2); % print this 
         msk = msk | (ts < (thresh2-thresh(2)));
     end
 else
