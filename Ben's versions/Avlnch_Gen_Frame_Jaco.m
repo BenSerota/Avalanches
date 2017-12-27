@@ -8,24 +8,13 @@ clc
 close all
 %% Data Analysis
 
-%choose MAC or CPL comp:
-%~~~~~~~~~~~
-data_paths = {'E:\DOC\Data from Jaco\VS';'E:\DOC\Data from Jaco\MCS';...
-    'E:\DOC\Data from Jaco\EMCS';'E:\DOC\Data from Jaco\CTRL'};
-
-mac_data_paths = {'/Users/admin/Desktop/DACOBO_h/VS';'/Users/admin/Desktop/DACOBO_h/EMCS';...
-    '/Users/admin/Desktop/DACOBO_h/MCS';'/Users/admin/Desktop/DACOBO_h/CTRL'};
-%~~~~~~~~~~~
-
-conds = {'VS';'MCS';'EMCS';'CTRL'};
-sbcndt = {'LSGS';'LSGD';'LDGS';'LDGD'};
+DOC_basic
 
 [tb_size thresh pos cont] = av_param_values; % sets avalanche parameters
 
 for i = 1:length(conds)                                                     % over conditions
     
-%     cd(data_paths{i})
-    cd(mac_data_paths{i})
+    cd(data_paths{i})
     
     fold = what;
     subjects = length(fold.mat);
@@ -50,6 +39,3 @@ end
 loggingplots(SUBJECTS)
 
 calc_Entropy(SUBJECTS)
-
-
-% % functions
