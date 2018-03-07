@@ -3,12 +3,12 @@
 
 %% direct inputs
 % how much of data to take into consideration (~(0,1))?
-data_ratio = 0.042; % (rate min = 0.042)
+data_frac = 1; %0.042; % (rate min = 0.042)
 
 %use zscore only(=0) or hilbert transform on zscore(=1)?
 event_flag = 1; 
 
-% should we also seperate LZC scores by task (0=no)?
+% should we also seperate analysis by task (0=no)?
 task_flag = 0;
 
 

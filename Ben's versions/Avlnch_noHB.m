@@ -1,4 +1,4 @@
-function [f,bprm,bprm2,ls,fls,iai] = Avlnch_noHB(data_ratio,task_flag)
+function [ALL_BIG5s] = Avlnch_noHB(data_frac,task_flag)
 % this function:
 % 1. takes INPUT ratio of jaco data and removes its HB component.
 % 2. calculates Lempel Ziv Complexity, Zhang implementaiton.
@@ -7,7 +7,7 @@ function [f,bprm,bprm2,ls,fls,iai] = Avlnch_noHB(data_ratio,task_flag)
 global out_paths subconds num lim E_T_flag %#ok<NUSED>
 
 %% handle input
-if data_ratio <= 0 || data_ratio > 1
+if data_frac <= 0 || data_frac > 1
     error('data ratio must be between 0 and 1')
 end
 
@@ -16,13 +16,17 @@ if task_flag ~= 0 && task_flag ~= 1
 end
 
 %% prepare
-DOC_Basic2;
-%% handle data_ratio < 1
-if data_ratio < 1
-    small_amnt_sbjcts = round(data_ratio * amnt_sbjcts); %#ok
-    % handle case where # subj is 0 due to low data_ratio
+DOC_Basic2; av_param_values;
+global tb_size thresh pos cont
+
+ALL_BIG5s = cell(1,length(conds));
+
+%% handle data_frac < 1
+if data_frac < 1
+    small_amnt_sbjcts = round(data_frac * amnt_sbjcts); %#ok
+    % handle case where # subj is 0 due to low data_frac
     if nnz(small_amnt_sbjcts==0)>0
-        error('data_ratio appears to be too low, number of subjects in some conditions is 0')
+        error('data_frac appears to be too low, number of subjects in some conditions is 0')
     end
     amnt_sbjcts = num2cell(amnt_sbjcts);
     small_amnt_sbjcts = num2cell(small_amnt_sbjcts);    % moving to cell structure for @cellfun only
@@ -41,23 +45,31 @@ end
 
 %% go
 % main outpus:
-[f,bprm,bprm2,ls,fls,iai] = deal(cell(1,length(conds)));
+% [f,bprm,bprm2,ls,fls,iai] = deal(cell(1,length(conds)));
 
-for rate = rates
+% % for rate = rates
+%     while ~finito
+%         [f{cnd}{subj}, bprm{cnd}{subj}, bprm2{cnd}{subj},...
+%             ls{cnd}{subj}, fls{cnd}{subj}, iai{cnd}{subj}]...
+%             = Do1Sbj(NAMES, cnd, subj); % allocate LZC scores (1 grade or 4... egal)
+%         [cnd, subj, finito] = JacoClock(amnt_sbjcts, cnd, subj);    % advaning us in Jaco clock
+%     end
+% % end
+
+% main outpus: BIG5s
+
+% for rate = rates
     while ~finito
-        [f{cnd}{subj}, bprm{cnd}{subj}, bprm2{cnd}{subj},...
-            ls{cnd}{subj}, fls{cnd}{subj}, iai{cnd}{subj}]...
-            = Do1Sbj(NAMES, cnd, subj); % allocate LZC scores (1 grade or 4... egal)
+        [ALL_BIG5s{cnd}{subj}] = Do1Sbj(NAMES, cnd, subj); % allocate LZC scores (1 grade or 4... egal)
         [cnd, subj, finito] = JacoClock(amnt_sbjcts, cnd, subj);    % advaning us in Jaco clock
     end
-end
+% end
 
 %% assisting functions
 
 
-function [F,BPRM,BPRM2,LS,FLS,IAI] = Do1Sbj(NAMES, cnd, subj) % NOTE: consider making task_flag an input
-global out_paths subconds task_flag
-[F,BPRM,BPRM2,LS,FLS,IAI] = deal(nan(length(subconds),1));
+function [BIG5] = Do1Sbj(NAMES, cnd, subj) % NOTE: consider making task_flag an input
+global out_paths subconds task_flag tb_size thresh pos cont
 
 cd(out_paths{cnd})
 name = char(NAMES{cnd}(subj));
@@ -68,23 +80,30 @@ name_I = [ name '_HBICs'];
 load(name_p);                                                              % load subject
 load(name_I);                                                              % load HB info
 
+%% TO DO :
+%TODO: here a big mss to fix/write: resave in WS data with no hb. check
+% then matcat it 
+% then build BIG5?
+%%
 
 for i  = 1:length(subconds)
-    [F(i),BPRM(i),BPRM2(i),LS(i),FLS(i),IAI(i)] = Do1Task(i,final,Comps2Reject);
+     DATAnhb{i} = RemoveHB1Task(i,final,Comps2Reject);
+     DATAnhb{i} = DATAnhb{i}'; % cuz tomer's code wants mat to be : datapoints X channels.
+     [BIG5] = eeg2avalnch_ben(DATAnhb{i},tb_size,thresh,pos,cont)
 end
 
-if ~task_flag   % if not taking into consideration tasks, average.
-    F = mean(F);
-    BPRM = mean(BPRM);
-    BPRM2 = mean(BPRM2);
-    LS = mean(LS);
-    FLS = mean(FLS);
-    IAI = mean(IAI);
-end
+
+%%
+% temp = data;
+% temp_raw = matcat(temp);
+% raw_data{ii} = temp_raw'; % must have correct structure!
+% clear temp
+% BIG5 = eeg2avalnch_ben(raw_data{ii},tb_size,thresh,pos,cont);
+% SUBJECTS{ii} = BIG5; % feeding into main cell array
 
 clear final Comps2Reject   % just in case...
 
-function [f,bprm,bprm2,ls,fls,iai] = Do1Task(i,final,Comps2Reject)
+function [DATAnhb] = RemoveHB1Task(i,final,Comps2Reject)
 global subconds num lim
 DATAwhb.data = final.(subconds{i}).data;
 DATAwhb.w = final.(subconds{i}).w;
@@ -93,27 +112,10 @@ rejcomps = Comps2Reject.(subconds{i});
 
 DATAnhb = remove_HB(DATAwhb, rejcomps, num, lim);
 
-clear DATAwhb DATAnhb rejcomps
+clear DATAwhb rejcomps
 
 DATAnhb = reshape(DATAnhb,206,385,[]);
-n = size(DATAnhb,3);
-[f,bprm,bprm2,ls,fls,iai] = deal(nan(n,1));
-%% core
-%     try
-for i = 1:n % over epochs
-    [f(i),bprm(i),bprm2(i),ls(i),fls(i),iai(i)] = eeg2avalnch(DATAnhb',1:10,[],2); % FIXME: DATAnhb? %onetaskLZC(DATAnhb, rate, event_flag); % NOTE: double check . error ful.
-end
-% averaging over epochs
-% FIXME: check to see if averaging in correct dim !!
-f = mean(f);
-bprm = mean(bprm);
-bprm2 = mean(bprm2);
-ls = mean(ls);
-fls = mean(fls);
-iai = mean(iai);
-%     catch
-%         'fail stop'
-%     end
+
 
 
 function [DATAnhb] = remove_HB(DATAwhb, rejcomps, num, lim)

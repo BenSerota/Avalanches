@@ -66,7 +66,7 @@ av_sigma = cellfun(@(x,y) mean(y./x),frst,scnd);
 % BEN ADDED
 alphas = cellfun(@(x) pl2find_ML(x),av_size); %TODO: is this right?? 
 % A. is this missing a minus? values tend to be between .5-2 .
-% B.should I not calculate this regarding each form of avalanch? 
+% B.should I not calculate this regarding each form of avalanche? 
 %i.e. for each size/length/iai/sizeXlength ?
 
 %into a structure

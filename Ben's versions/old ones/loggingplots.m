@@ -2,15 +2,13 @@ function [] = loggingplots (SUBJECTS)
 
 % calc alphas
 PLOTS.alphas = mean(cell2mat(cellfun(@(x) x.alphas, SUBJECTS, ...
-    'UniformOutput', 0)), 1);
+    'UniformOutput', 0)), 1); % mean is automatically over subjs
 
 Probs = {'Ps',  'Pl',  'Psl', 'Pi'};
 for i = 1:length(Probs)
     P = Probs{i};
     PLOTS.(P) = mean(cell2mat(cellfun(@(x) GetProbs(x, P), SUBJECTS, ...
-        'UniformOutput', 0)), 1); % mean is according to 1st dimension which is subjects. 
-    % eliminating dummy (1st) dimension, after having averaged across
-    % subjects:
+        'UniformOutput', 0)), 1);
     PLOTS.(P) = reshape(PLOTS.(P), size(PLOTS.(P), 2), size(PLOTS.(P), 3));
     PLOTS.(P) = (PLOTS.(P))'; % we trandpose because later loglog function
     % will receive a matrix and will plot every row as a different line. yay
@@ -52,10 +50,10 @@ ylabel('Avalanch Length')
 legend(labels)
 
 figure('Name','Group Probability of Inter-Avalanch-Interval by Length , log-log');
-title('Group Probability of Inter-Avalanch-Interval by Length , log-log')
 loglog(PLOTS.Pi)
 hold on
 plot(ref_x,ref,'-b')
+title('Group Probability of Inter-Avalanch-Interval by Length , log-log')
 xlabel('Interval Length')
 ylabel('Probability')
 legend(labels)

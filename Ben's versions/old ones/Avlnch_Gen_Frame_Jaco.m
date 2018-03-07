@@ -11,28 +11,28 @@ close all
 DOC_basic
 
 [tb_size thresh pos cont] = av_param_values; % sets avalanche parameters
-
+SUBJECTS = cell(1,length(conds)); % just for now. should be subjsXconds.
 for i = 1:length(conds)                                                     % over conditions
     
     cd(data_paths{i})
     
     fold = what;
-    subjects = length(fold.mat);
-    SUBJECTS = cell(subjects,1);
+%     subjects = length(fold.mat);
     
     % TODO: maybe size by length is actually only prob of size
     
-    for ii = 1:subjects                                                     % over subjects
+    for ii = 1:1 %subjects                                                     % over subjects
 %         temp = load(fold.mat{ii});
         load(fold.mat{ii});
+        temp = data;
         temp_raw = matcat(temp);
         raw_data{ii} = temp_raw'; % must have correct structure!
-        clear temp
-        [BIG5] = eeg2avalnch_ben(raw_data{ii},tb_size,thresh,pos,cont);
-        SUBJECTS{ii} = BIG5; % feeding into main cell array
-        clear BIG4
+        clear temp 
+        BIG5 = eeg2avalnch_ben(raw_data{ii},tb_size,thresh,pos,cont);
+        SUBJECTS{ii,i} = BIG5; % feeding into main cell array
+        clear BIG5
     end
-    
+
 end
 %%
 
