@@ -1,4 +1,4 @@
-function avprms = Avlnch_noHB(data_frac,outname)
+function [ALL_BIG5s] = Avlnch_noHB(data_frac,task_flag)
 % this function:
 % 1. takes INPUT ratio of jaco data and removes its HB component.
 % 2. calculates Lempel Ziv Complexity, Zhang implementaiton.
@@ -11,10 +11,15 @@ if data_frac <= 0 || data_frac > 1
     error('data ratio must be between 0 and 1')
 end
 
+if task_flag ~= 0 && task_flag ~= 1
+    error('task_flag must be either 1 or 0, i.e., taking into consideration experiment task or not')
+end
 
 %% prepare
 DOC_Basic2; av_param_values;
+global tb_size thresh pos cont
 
+ALL_BIG5s = cell(1,length(conds));
 
 %% handle data_frac < 1
 if data_frac < 1
@@ -38,46 +43,33 @@ if data_frac < 1
     amnt_sbjcts = small_amnt_sbjcts; % giving back to amnt_sbjcts for JacoClock !
 end
 
-%
-if exist('outname','var')
-    try
-        load(outname)
-        fnams = cellstr(char(avprms.file));%#ok
-        rthere = cellfun(@isempty,fnams);
-        fnams(rthere) = '';
-        avprms(rthere) = '';
-        counter = length(avprms);
-        k = length(union(fils,fnams));
-        if k > length(avprms)
-            avprms(k).corrupt = {};
-        end
-    catch
-        flds = {'subj' 'cond_subj' 'cond' 'tsk' 'alphs' 'bprm1' 'bprm2' 'ls' 'fls' 'iai' 'corrupt'};
-        avprms = cell2struct(cell(183*4,length(flds)),flds,2);%183x4 subjects x subconditions
-        counter = 0;
-    end
-else
-    outname = [];
-    flds = {'subj' 'cond_subj' 'cond' 'tsk' 'tsk' 'alphs' 'bprm1' 'bprm2' 'ls' 'fls' 'iai' 'corrupt'};
-    avprms = cell2struct(cell(183*4,length(flds)),flds,2);
-    counter = 0;
-end
-
-
-
 %% go
+% main outpus:
+% [f,bprm,bprm2,ls,fls,iai] = deal(cell(1,length(conds)));
+
+% % for rate = rates
+%     while ~finito
+%         [f{cnd}{subj}, bprm{cnd}{subj}, bprm2{cnd}{subj},...
+%             ls{cnd}{subj}, fls{cnd}{subj}, iai{cnd}{subj}]...
+%             = Do1Sbj(NAMES, cnd, subj); % allocate LZC scores (1 grade or 4... egal)
+%         [cnd, subj, finito] = JacoClock(amnt_sbjcts, cnd, subj);    % advaning us in Jaco clock
+%     end
+% % end
+
+% main outpus: BIG5s
+
 % for rate = rates
-while ~finito%#ok
-    [avprms,counter] = Do1Sbj(NAMES, cnd, subj,avprms,counter);
-    [cnd, subj, finito] = JacoClock(amnt_sbjcts, cnd, subj);    % advaning us in Jaco clock
-end
+    while ~finito
+        [ALL_BIG5s{cnd}{subj}] = Do1Sbj(NAMES, cnd, subj); % allocate LZC scores (1 grade or 4... egal)
+        [cnd, subj, finito] = JacoClock(amnt_sbjcts, cnd, subj);    % advaning us in Jaco clock
+    end
 % end
 
 %% assisting functions
 
 
-function [avprms,counter] = Do1Sbj(NAMES, cnd, subj, avprms,counter) % NOTE: consider making task_flag an input
-global out_paths subconds 
+function [BIG5] = Do1Sbj(NAMES, cnd, subj) % NOTE: consider making task_flag an input
+global out_paths subconds task_flag tb_size thresh pos cont
 
 cd(out_paths{cnd})
 name = char(NAMES{cnd}(subj));
@@ -94,34 +86,20 @@ load(name_I);                                                              % loa
 % then build BIG5?
 %%
 
-
 for i  = 1:length(subconds)
-     teeg = RemoveHB1Task(i,final,Comps2Reject)'; % using {i} to avoid erasing task seperation, to be differentiated if needed
-     [smpls,sensr] = size(teeg);
-     epoch_N = smpls/385;
-     teeg = reshape(teeg,[385 epoch_N sensr]);
-     if z_flag
-         teeg = zscore(teeg);
-     end
-     teeg = cat(1,teeg,zeros([1,epoch_N,sensr]));
-     teeg = reshape(teeg,[epoch_N*386,sensr]);
-     
-     counter = counter + 1;
-     avprms(counter).cond = cnd;
-     avprms(counter).subj = ceil(counter/length(subconds));
-     avprms(counter).cond_subj = subj;
-     avprms(counter).tsk = i;
-     try
-         [avprms(counter).alphs,avprms(counter).bprm1,avprms(counter).bprm2,...
-             avprms(counter).ls,avprms(counter).fls,avprms(counter).iai] = eeg2avalnch_epoch(teeg,1:10,[],2,385);
-         avprms(counter).corrupt = 0;
-     catch
-         avprms(counter).corrupt = 1;
-     end
-     toc
+     DATAnhb{i} = RemoveHB1Task(i,final,Comps2Reject);
+     DATAnhb{i} = DATAnhb{i}'; % cuz tomer's code wants mat to be : datapoints X channels.
+     [BIG5] = eeg2avalnch_ben(DATAnhb{i},tb_size,thresh,pos,cont);
 end
 
 
+%%
+% temp = data;
+% temp_raw = matcat(temp);
+% raw_data{ii} = temp_raw'; % must have correct structure!
+% clear temp
+% BIG5 = eeg2avalnch_ben(raw_data{ii},tb_size,thresh,pos,cont);
+% SUBJECTS{ii} = BIG5; % feeding into main cell array
 
 clear final Comps2Reject   % just in case...
 
@@ -136,7 +114,7 @@ DATAnhb = remove_HB(DATAwhb, rejcomps, num, lim);
 
 clear DATAwhb rejcomps
 
-% DATAnhb = reshape(DATAnhb,206,385,[]);
+DATAnhb = reshape(DATAnhb,206,385,[]);
 
 
 
