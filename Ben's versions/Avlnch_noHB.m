@@ -94,7 +94,6 @@ load(name_I);                                                              % loa
 % then build BIG5?
 %%
 
-
 for i  = 1:length(subconds)
      teeg = RemoveHB1Task(i,final,Comps2Reject)'; % using {i} to avoid erasing task seperation, to be differentiated if needed
      [smpls,sensr] = size(teeg);
@@ -118,7 +117,7 @@ for i  = 1:length(subconds)
      catch
          avprms(counter).corrupt = 1;
      end
-     toc
+     toc % FIXME: missing tic
 end
 
 
