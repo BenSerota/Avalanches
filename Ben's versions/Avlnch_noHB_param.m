@@ -5,23 +5,16 @@
 % how much of data to take into consideration (~(0,1))?
 data_frac = 1; %0.042; % (rate min = 0.042)
 
-%use zscore only(=0) or hilbert transform on zscore(=1)?
-event_flag = 1; 
-
-% should we also seperate analysis by task (0=no)?
-task_flag = 0;
-
+% name of saved file
+outname = 'AllSubj_AvlnchPrm';
 
 %% globals
+%Z scoring. 1 = per epoch, 0 = per row, concatenated all epochs
+z_flag = 1;
+
 % r chooses how many of the first ICs to reject in each dataset:
-num = 1;
+num = 30;
 
 % what's the component beyond which we don't care if there is HB (as
 % components are organized hierarchically).
-lim = inf;
-
-% calc LZC by row (temporal; 0) or column (sptial; 1)
-E_T_flag = 0;
-
-% % plot HB EEG ?
-% plothb = 0;
+lim = 30;
