@@ -7,7 +7,7 @@ data_frac = 1; %0.042; % (rate min = 0.042)
 
 % name of saved file
 outname = 'AllSubj_AvlnchPrm';
-
+avl_outpath = 'E:\Dropbox\Ben Serota\eeg ANALYSES\results\avalanches';
 %% globals
 %Z scoring. 1 = per epoch, 0 = per row, concatenated all epochs
 z_flag = 1;

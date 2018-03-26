@@ -90,10 +90,10 @@ for i  = 1:length(subconds)
      avprms(counter).subj = ceil(counter/length(subconds));
      avprms(counter).cond_subj = subj;
      avprms(counter).tsk = i;
-
+     avprms(counter).finito
      try
-         [avprms(counter).alphs,avprms(counter).bprm1,avprms(counter).bprm2,...
-         avprms(counter).ls,avprms(counter).fls,avprms(counter).iai] = eeg2avalnch_epoch(teeg,tb_size,thresh,pos,385);
+%          [avprms(counter).alphs,avprms(counter).bprm1,avprms(counter).bprm2,...
+%              avprms(counter).ls,avprms(counter).fls,avprms(counter).iai] = eeg2avalnch_epoch(teeg,tb_size,thresh,pos,385);
          avprms(counter).corrupt = 0;
      catch
          avprms(counter).corrupt = 1;
