@@ -38,16 +38,16 @@ end
 
 %
 
-try
-    cd(avl_outpath)
-    load(outname)
-    counter = length(cat(1,avprms.cond)); %#ok
-    [cnd, subj, finito] = JacoClock(amnt_sbjcts,avprms(counter).cond, avprms(counter).cond_subj);
-catch
+% try
+%     cd(avl_outpath)
+%     load(outname)
+%     counter = length(cat(1,avprms.cond)); %#ok
+%     [cnd, subj, finito] = JacoClock(amnt_sbjcts,avprms(counter).cond, avprms(counter).cond_subj);
+% catch
     flds = {'subj' 'cond_subj' 'cond' 'tsk' 'alphs' 'bprm1' 'bprm2' 'ls' 'fls' 'iai' 'corrupt'};
     avprms = cell2struct(cell(183*4,length(flds)),flds,2);                  %183x4 = subjects x subconditions
     counter = 0;
-end
+% end
 
 
 %% go
