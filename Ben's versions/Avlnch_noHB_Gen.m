@@ -1,6 +1,6 @@
 %LZC_noHB_Gen
 
-clear
+clear all
 close all
 clc
 start_ben
@@ -8,8 +8,6 @@ global out_paths conds subconds num lim z_flag avl_outpath %#ok<NUSED>
 DOC_basic
 Avlnch_noHB_param
 
-cd(avlnch_rslts)
-load('avlnch001+sts')
 %% run analysis or load data
 if ~exist('avprms','var')  % check if doc_avprms2sts has already run
     cd(avlnch_rslts)
@@ -37,12 +35,16 @@ bads = prblmdata(30000);
 bads(bads>length(sts)) = []; % getting rid of any corrupt data sets. 
 sts(:,bads) = [];
 grp(:,bads) = [];
-scatter_prms_by_cond(sts,grp);
-tilefigs
 
 %% looking at extreme sts vals
 zz = zscore(sts,1,2); % along rows
-ext = zz>=3 | zz<=-3;
+ext = zz>=4 | zz<=-4;
+
+%% plot
+scatter_prms_by_cond(sts,grp,ext);
+tilefigs
+
+%% back to finding extreme subjects names
 ext_inds = find(ext);
 size = size(ext);
 subsc = inds2subs (size, ext_inds);
@@ -50,41 +52,37 @@ subsc = sortrows(subsc,1);
 
 badsubjs = cell(length(subsc),3);
 for i = 1:length(subsc)
-    badsubjs{i,1} = subsc(i,1);
+    badsubjs{i,1} = nms{subsc(i,1)};
     [badsubjs{i,2}, badsubjs{i,3}] = watsubj(subsc(i,end));
 end
-
-t = sortrows(badsubjs,2);
-
-unique(badsubjs);
-
+badsubjs = sortrows(badsubjs,2);
+unibads = unique({badsubjs{:,2}}');
+cd(avl_outpath)
+save('WSavlnch0001+sts+badsubjs')
 %% iinput extreme vals!
-[stsrow, matrix] = findinsts(12.69,sts);
-
-[subj, task] = watsubj(matrix);
+% [stsrow, matrix] = findinsts(12.69,sts);
+% [subj, task] = watsubj(matrix);
 
 
 %% inner functions
-function [] = scatter_prms_by_cond(prms,grp)
+function [] = scatter_prms_by_cond(prms,grp,ext)
 global conds
 params = {'sigmas', 'alphas', 'taus', 'gammas', 'deltas', 'kappas', 'genkappas'};
 param_rows = [2,4,6,8,10,31,32];
 
-for i = 1:length(params)
+for i = 1:length(params) % over parameters
     figure('name',params{i})
     row = param_rows(i);  % parameter row
     for ii = 1:length(conds) %conds
         toscatter = prms(row , grp == ii);
-        
-        % throwing away outliers (lower and upper 5prcnt)
-%         low = prctile(toscatter,5);
-%         up = prctile(toscatter,95);
-%         toscatter = toscatter(toscatter>=low & toscatter<=up);
-%         
         scatter(ii*ones(1,length(toscatter)),toscatter)
         means(ii) = mean(toscatter);
         hold on
         scatter(ii,means(ii),'bd')
+        extremes = toscatter(ext(row,grp==ii));
+        scatter(ii*ones(1,length(extremes)),extremes,'k*')
+        
+        % setting figure borders
         uplim(ii) = max(toscatter);
         lowlim(ii) = min(toscatter);
     end
@@ -101,7 +99,6 @@ end
 tilefigs
 end
 
-
 function subs = inds2subs(size,inds)
 [s1,s2] = deal(nan(length(inds),1));
 for i = 1:length(inds)
@@ -109,6 +106,7 @@ for i = 1:length(inds)
 end
 subs = cat(2,s1,s2);
 end
+
 % for i = 1:length(conds)
 %     sigmas{i} = prms(2,grp==i);
 %     alphas{i} = prms(4,grp==i);
