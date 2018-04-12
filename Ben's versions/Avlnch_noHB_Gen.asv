@@ -50,8 +50,10 @@ subsc = sortrows(subsc,1);
 
 badsubjs = cell(length(subsc),3);
 for i = 1:length(subsc)
-    badsubjs{i,1} = subsc(i,1);
+    badsubjs{i,l} = code4num(subsc(i,1));
     [badsubjs{i,2}, badsubjs{i,3}] = watsubj(subsc(i,end));
+    
+ 
 end
 
 t = sortrows(badsubjs,2);
@@ -109,6 +111,11 @@ for i = 1:length(inds)
 end
 subs = cat(2,s1,s2);
 end
+
+function [code] = code4num(num)
+
+end
+
 % for i = 1:length(conds)
 %     sigmas{i} = prms(2,grp==i);
 %     alphas{i} = prms(4,grp==i);
