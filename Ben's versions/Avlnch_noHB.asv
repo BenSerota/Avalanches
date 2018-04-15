@@ -4,7 +4,8 @@ function avprms = Avlnch_noHB(data_frac,outname)
 % 2. calculates Avalanches parameters.
 % 3. saves output as it goes. able to continue from point at which it stopped.
 
-global out_paths subconds num lim tb_size thresh pos z_flag avl_outpath %#ok<NUSED>
+global out_paths subconds num lim tb_size thresh pos z_flag avl_outpath ...
+    %#ok<NUSED>
 
 %% handle input
 if data_frac <= 0 || data_frac > 1
@@ -12,7 +13,7 @@ if data_frac <= 0 || data_frac > 1
 end
 
 %% prepare
-DOC_basic2; %av_param_values;
+DOC_basic2; av_param_values;
 
 %% handle data_frac < 1
 if data_frac < 1
@@ -36,11 +37,18 @@ if data_frac < 1
     amnt_sbjcts = small_amnt_sbjcts;                                        % giving back to amnt_sbjcts for JacoClock !
 end
 
+%
 
-flds = {'subj' 'cond_subj' 'cond' 'tsk' 'alphs' 'bprm1' 'bprm2' 'ls' 'fls' 'iai' 'corrupt'};
-avprms = cell2struct(cell(183*4,length(flds)),flds,2);                  %183x4 = subjects x subconditions
-counter = 0;
-
+% try
+%     cd(avl_outpath)
+%     load(outname)
+%     counter = length(cat(1,avprms.cond)); %#ok
+%     [cnd, subj, finito] = JacoClock(amnt_sbjcts,avprms(counter).cond, avprms(counter).cond_subj);
+% catch
+    flds = {'subj' 'cond_subj' 'cond' 'tsk' 'alphs' 'bprm1' 'bprm2' 'ls' 'fls' 'iai' 'corrupt'};
+    avprms = cell2struct(cell(183*4,length(flds)),flds,2);                  %183x4 = subjects x subconditions
+    counter = 0;
+% end
 
 
 %% go
@@ -55,7 +63,7 @@ end
 
 %% assisting functions
 
-function [avprms,counter] = Do1Sbj(NAMES, cnd, subj, avprms,counter, z_flag)
+function [avprms,counter] = Do1Sbj(NAMES, cnd, subj, avprms,counter, z_flag)       
 global out_paths subconds tb_size thresh pos
 
 cd(out_paths{cnd})
@@ -68,29 +76,29 @@ load(name_p);                                                              % loa
 load(name_I);                                                              % load HB info
 tic
 for i  = 1:length(subconds)
-    teeg = RemoveHB1Task(i,final,Comps2Reject)';
-    [smpls,sensr] = size(teeg);
-    epoch_N = smpls/385;
-    teeg = reshape(teeg,[385 epoch_N sensr]);
-    if z_flag
-        teeg = zscore(teeg);
-    end
-    teeg = cat(1,teeg,zeros([1,epoch_N,sensr]));
-    teeg = reshape(teeg,[epoch_N*386,sensr]);
-    
-    counter = counter + 1;
-    avprms(counter).cond = cnd;
-    avprms(counter).subj = ceil(counter/length(subconds));
-    avprms(counter).cond_subj = subj;
-    avprms(counter).tsk = i;
-    
-    try
-        [avprms(counter).alphs,avprms(counter).bprm1,avprms(counter).bprm2,...
-            avprms(counter).ls,avprms(counter).fls,avprms(counter).iai] = eeg2avalnch_epoch(teeg,tb_size,thresh,pos,385);
-        avprms(counter).corrupt = 0;
-    catch
-        avprms(counter).corrupt = 1;
-    end
+     teeg = RemoveHB1Task(i,final,Comps2Reject)';
+     [smpls,sensr] = size(teeg);
+     epoch_N = smpls/385;
+     teeg = reshape(teeg,[385 epoch_N sensr]);
+     if z_flag
+         teeg = zscore(teeg);
+     end
+     teeg = cat(1,teeg,zeros([1,epoch_N,sensr]));
+     teeg = reshape(teeg,[epoch_N*386,sensr]);
+     
+     counter = counter + 1;
+     avprms(counter).cond = cnd;
+     avprms(counter).subj = ceil(counter/length(subconds));
+     avprms(counter).cond_subj = subj;
+     avprms(counter).tsk = i;
+
+     try
+         [avprms(counter).alphs,avprms(counter).bprm1,avprms(counter).bprm2,...
+         avprms(counter).ls,avprms(counter).fls,avprms(counter).iai] = eeg2avalnch_epoch(teeg,tb_size,thresh,pos,385);
+         avprms(counter).corrupt = 0;
+     catch
+         avprms(counter).corrupt = 1;
+     end
 end
 toc
 fprintf('finished subj %s \n', name);
@@ -110,7 +118,7 @@ clear DATAwhb rejcomps % just in case...
 
 
 function [DATAnhb] = remove_HB(DATAwhb, rejcomps, num, lim)
-% global num lim
+% global num lim 
 % This code is meant to remove a number of hb ICs form our data.
 % ICA activation matrix  = W * Sph * Raw:
 ICAact = DATAwhb.w * DATAwhb.sph * DATAwhb.data;
