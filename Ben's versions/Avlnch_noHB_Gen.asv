@@ -14,20 +14,24 @@ if ~exist('avprms','var')  % check if doc_avprms2sts has already run
     [avprms] = Avlnch_noHB(data_frac, outname);
 end
 %% testing resulting avlnchs stats
-amnt_crpt = nnz([avprms.corrupt]);
+amnt_crpt = 0;
+for i = 1:length(avprms)
+    amnt_crpt = amnt_crpt + avprms(i).corrupt;
+end
+nn
 
 if amnt_crpt>0
     disp('some rows are curropt');
     avprms(find([avprms.corrupt] == 1)) = [];
+else
+    cd(avlnch_rslts)
+    SaveUnique('WS_Avl')
 end
-
 %% Generate statistics
 if ~exist('sts','var')  % check if doc_avprms2sts has already run
     [sts,nms,tsk,grp,subj,hs,phsps] = doc_avprms2sts(avprms,'all',1,5);
+    
 end
-
-cd(avlnch_rslts)
-SaveUnique('WS_Avl')
 
 %% plotting
 scatter_avl

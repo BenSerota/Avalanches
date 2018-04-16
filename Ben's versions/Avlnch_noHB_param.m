@@ -28,5 +28,21 @@ pos = 2;
 % cont = 1;
 
 %% avlnch statistics 
+% what is a too sparse data set? below __ samples:
+sprs = 30000;
 % what constitutes an outlier (in STD)?
 ext_STD = 4;
+
+%parameters:
+params = {'sigmas', 'alphas', 'taus', 'gammas', 'deltas', 'kappas', 'genkappas'};
+
+%data in sts matrix in rows:
+param_rows = [2,4,6,8,10,31,32];
+% alpha = sts(4,:);
+% tau = sts(6,:);
+% sigma = sts(2,:);
+% gamma = sts(8,:);
+% delta = sts(10,:);
+% kappa = sts(31,:);
+% kappagen = sts(32,:);
+
