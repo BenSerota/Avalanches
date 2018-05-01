@@ -41,7 +41,7 @@ for i = 1:length(params)
         %     E = cellfun(@(x) mean(x,2), STEs);
         E =  cell2mat(cellfun(@(x) std(x)/sqrt(length(x)), temp,'UniformOutpu',false));
         
-        BensSuperbar(Param_to_bar,3,Ps4bar,E,save_bar,avlnch_rslts,params{i})
+        BensSuperbar(Param_to_bar,3,Ps4bar,E,save_bar,avlnch_rslts,params{i},alph)
     end
     tilefigs
 end

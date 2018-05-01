@@ -31,8 +31,8 @@ if ~exist('sts','var')  % check if doc_avprms2sts has already run
 %     [sts,nms,tsk,grp,subj,hs,phsps] = doc_avprms2sts(avprms,'all',1,5,5);
     [alphs,sigms,taus,gams,delts,kap,gen_kp,cos,subj,cond_subj,cond,tsk] = doc_avprms2sts_single(avprms,1,10);
     sts = zeros(33,length(alphs));
-    sts0 = cat(1,sigms,alphs,taus,gams,delts,kap,gen_kp);
-    sts([2,4,6,8,10,31,32],:) = sts0;
+    sts0 = cat(1,sigms,alphs,taus,gams,delts,kap,gen_kp,cos);
+    sts(param_rows,:) = sts0;
     load nec_var
     
     cd(avlnch_rslts)
