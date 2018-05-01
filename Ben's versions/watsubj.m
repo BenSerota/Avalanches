@@ -9,8 +9,11 @@ emcs = 24;
 ctrl = 12;
 
 subj = floor(num/4);
+if subj == 0 % if first subj
+    subj = 1;
+end
 task_n = mod(num,4);
-if task_n == 0
+if task_n == 0 % if first subj
     task_n = 4;
 end
 task = subconds{task_n};

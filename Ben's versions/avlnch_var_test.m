@@ -1,40 +1,56 @@
 %avlnch var test
-prms = {'alphas', 'taus', 'sigma', 'gamma', 'delta', 'kappa', 'kappagen'};
+new_cond_marker = [avprms.cond];
+new_cond_marker(bads) = [];
 
-codes = [4,6,2,8,10,31,32];
-
+%% creating final structures
 a = struct();
-for i = 1:length(prms)
+for i = 1:length(params)
     for ii = 1:length(conds)
-        a = setfield(a,prms{i},conds{ii},...
-            sts(codes(i),[avprms.cond]==ii)');
+        a = setfield(a,params{i},conds{ii},...
+            sts(param_rows(i),new_cond_marker==ii)');
     end
 end
+
+flds = {'Parameter','P_Anov','P_corrected', 'H'};
+A = cell2struct(cell(length(params),length(flds)),flds,2);
 
 % 1. run F test, per parameter
-for i = 1:length(prms)
+for i = 1:length(params)
+    A(i).Parameter = params{i};
+    
+    % turning data into cell for accecibility
     temp = cell(1,4);
     for ii = 1:4
-        temp{ii} = a.(prms{i}).(conds{ii});
+        temp{ii} = a.(params{i}).(conds{ii});
     end
-    F.(prms{i}) = BensAnovaTest(temp,0.05);
+    A(i).P_Anov = BensAnovaTest(temp,alph,params{i});
+    
+    if A(i).P_Anov <= alph
+        % 2. run paired t-tests
+        [H, Pt, p_inds] = BensTtest(temp,alph);
+        
+        % 3. correct for mult comp
+        [A(i).P_corrected, crit_p, A(i).H] = fdr_bh(Pt,alph);
+        
+        % % 4. prepare P values for Bar graph
+        Ps4bar = prepP(A(i).P_corrected,p_inds);
+        
+        Param_to_bar = cellfun(@(x) mean(x),temp,'UniformOutpu',false);
+        Param_to_bar = cell2mat(Param_to_bar);
+        save_bar = 0;
+        %     E = cellfun(@(x) mean(x,2), STEs);
+        E =  cell2mat(cellfun(@(x) std(x)/sqrt(length(x)), temp,'UniformOutpu',false));
+        
+        BensSuperbar(Param_to_bar,3,Ps4bar,E,save_bar,avlnch_rslts,params{i})
+    end
+    tilefigs
 end
-% % 2. run paired t-tests
-% %     if P <= alpha
-% [H, Pt, p_inds] = BensTtest(data,alpha);
-% 
-% % 3. correct for mult comp
-% [Pt_cor, crit_p, h] = fdr_bh(Pt,alpha);
-% 
-% % 4. prepare P values for Bar graph
-% Ps4bar = prepP(Pt_cor,p_inds);
-% 
-% LZCs_to_bar = cellfun(@(x) mean(x),data,'UniformOutpu',false');
-% LZCs_to_bar = cell2mat(LZCs_to_bar);
-% save_bar = 0;
-% %     E = cellfun(@(x) mean(x,2), STEs);
-% E = cell2mat(STEs);
-% 
-% BensSuperbar(LZCs_to_bar,i,Ps4bar,E,save_bar,LZC_nohb_outpath )
-% 
 
+
+function Ps4bar = prepP(Pt_cor,inds)
+global conds
+Ps4bar = zeros(length(conds));
+Ps4bar(inds) = Pt_cor;
+Ps4bar = Ps4bar + Ps4bar';
+Ps4bar(Ps4bar==0) = 1;
+end

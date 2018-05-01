@@ -1,17 +1,9 @@
 
 %% plotting
-bads = prblmdata(sprs);
-bads(bads>length(sts)) = []; % getting rid of any corrupt data sets. 
-sts(:,bads) = [];
-grp(:,bads) = [];
-
-%% looking at extreme sts vals
-zz = zscore(sts,1,2); % along rows
-ext = zz>= ext_STD | zz<=-ext_STD;
 
 %% plot
 scatter_prms_by_cond(sts,grp,ext);
-tilefigs
+cd(avlnch_rslts)
 
 
 %% inner functions
@@ -42,7 +34,7 @@ for i = 1:length(params) % over parameters
     xlim([0.5 4.5])
     uplim = max(uplim);
     lowlim = min(lowlim);
-    ylim([lowlim-.2 uplim+.2]) % 
+    ylim([lowlim-.2 uplim+.2]) %
 end
 tilefigs
 end

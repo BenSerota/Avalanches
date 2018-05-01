@@ -6,7 +6,7 @@
 data_frac = 1; %0.042; % (rate min = 0.042)
 
 % name of saved file
-outname = ['AllSubj_AvlnchPrm' '_thresh2to3'];
+outname = ['AllSubj_AvlnchPrm' '_thresh3to4'];
 avl_outpath = 'C:\Users\BenSerota\Dropbox\Ben Serota\eeg ANALYSES\results\avalanches';
 
 %% globals
@@ -22,7 +22,7 @@ lim = 30;
 
 %% avalanch [arameter values
 tb_size = 1:10; 
-thresh = 2:.1:3;
+thresh = 3.1:.1:4; %2:.1:3;
 % thresh = 0.005;
 pos = 2;
 % cont = 1;
@@ -45,4 +45,8 @@ param_rows = [2,4,6,8,10,31,32];
 % delta = sts(10,:);
 % kappa = sts(31,:);
 % kappagen = sts(32,:);
+
+%% testing for significance, at alpha = 
+alph = 0.05;
+
 

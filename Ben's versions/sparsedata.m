@@ -1,4 +1,4 @@
-function [vec] = prblmdata(cutoff)
+function [vec] = sparsedata(cutoff)
 DOC_basic
 cd(LZ_rslts)
 load('numelements')

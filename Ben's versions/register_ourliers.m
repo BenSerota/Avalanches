@@ -1,4 +1,21 @@
 % Register Outliers
+%% replacing nan values with MEANS of params
+badsets = []; % preallocating
+for i = param_rows
+    row = (sts(i,:));
+    m = mean(row,'omitnan');
+    n = find(isnan(row));
+    sts(i,n) = m;
+    badsets = [badsets n];
+end
+badsets = unique(badsets)'; % saving to erase from general analysis (I don't want to add artificial data)
+
+%% looking at extreme sts vals
+
+zz = zscore(sts,1,2); % along rows
+ext = zz>= ext_STD | zz<=-ext_STD;
+
+%% Registering
 ext_inds = find(ext);
 siz = size(ext);
 ext_vals = zz(ext);
