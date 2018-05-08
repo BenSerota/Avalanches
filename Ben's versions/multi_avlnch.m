@@ -12,18 +12,20 @@ Avlnch_noHB_param
 
 run_count = 1;
 % BigStuff = cell(1,length(thresh));
+
+if multi_flag
 for mult_count = 1:length(thresh)
-%     BigStuff{i} = Avlnch_noHB_Gen(1,0,0);
+
     temp = Avlnch_noHB_Gen(1,0,0); % 4 = cond 4 = ctrl
     temp = cellfun(@(x) mean(x,1), temp, 'uniformoutput', false);
     
-%% scatter plot (with horiz+verti lines):
-%  scatter  (sigma,alpha) pair.
-
+%% save alphas and sigmas:
  Sigmas(:,mult_count) = temp{1}; % naturally transposes
  Alphas(:,mult_count) = temp{2};
 end
-
+else
+    ...
+end
 %% saving
 cd(avlnch_rslts)
 SaveUnique('Multi_')

@@ -1,19 +1,23 @@
-function [sig_alph] = LZC_noHB_Gen (multi_flag, cond_flag, var_flag,scat_flag)
+function [sig_alph] = LZC_noHB_Gen (multi_flag, var_flag, scat_flag)
 % runs avalanch analysis over JAco DOC database
 % multi_flag = are we creating a alpha-sigma plot?
-% should we also perform ANOVA?
-% should we scatter individual grades? (per dataset per parammeter).
+% cond_flag (globally inserted) = analyze statistics for condition # or all(0) ?
+% var_flag = should we also perform ANOVA?
+% scat_flag = should we scatter individual grades? (per dataset per parammeter).
 
 close all
 clc
 start_ben
-global out_paths conds subconds num lim z_flag avl_outpath param_rows params mult_count%#ok<NUSED>
+global out_paths conds subconds num lim z_flag avl_outpath param_rows params mult_count grp cond_flag %#ok<NUSED>
 DOC_basic
 Avlnch_noHB_param
 
 %load aavlnch analysis?
 cd(avlnch_rslts)
-load AllSubj_AvlnchPrm_thresh2to3
+% load AllSubj_AvlnchPrm_thresh2to3
+% load AllSubj_AvlnchPrm_thresh3to4
+load AllSubj_AvlnchPrm_thresh005
+load group_list
 
 %% run analysis or load data
 if ~exist('avprms','var')  % check if doc_avprms2sts has already run
@@ -33,11 +37,13 @@ end
 if ~exist('sts','var')  % check if doc_avprms2sts has already run
     if multi_flag
         if cond_flag == 1 || cond_flag == 2 || cond_flag == 3 || cond_flag == 4
-            avprms = avprms(grp==cond_flag);
-        else
-            
+            avprms = avprms(grp == cond_flag);
+        elseif cond_flag ~= 0
+            error('cond_flag must be an integer between 0 and 4)')
+        end
             
 %         [sts,nms,tsk,grp,subj,hs,phsps] = doc_avprms2sts(avprms,'all',1,10,1,0,mult_count,1,11); % first 11 changes 1:11
+%         [sts,nms,tsk,grp,subj,hs,phsps] = doc_avprms2sts(avprms,'all',1,10,1,0,1,mult_count,mult_count);
         [sts,nms,tsk,grp,subj,hs,phsps] = doc_avprms2sts(avprms,'all',1,10,1,0,1,mult_count,mult_count);
         
     else

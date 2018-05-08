@@ -43,6 +43,7 @@ if ~exist('sts','var')  % check if doc_avprms2sts has already run
         end
             
 %         [sts,nms,tsk,grp,subj,hs,phsps] = doc_avprms2sts(avprms,'all',1,10,1,0,mult_count,1,11); % first 11 changes 1:11
+%         [sts,nms,tsk,grp,subj,hs,phsps] = doc_avprms2sts(avprms,'all',1,10,1,0,1,mult_count,mult_count);
         [sts,nms,tsk,grp,subj,hs,phsps] = doc_avprms2sts(avprms,'all',1,10,1,0,1,mult_count,mult_count);
         
     else
