@@ -50,5 +50,8 @@ param_rows = [2,4,6,8,10,31,32,33];
 %% testing for significance, at alpha = 
 alph = 0.05;
 
-% running multi analysis over condition # x ?
-cond_flag = 4;
+% running multi analysis?
+multi_flag = 1;
+
+% multi analysis? over condition # ? (1/2/3/4 , 0 = all)
+cond_flag = 4; 
