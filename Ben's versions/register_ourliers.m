@@ -16,22 +16,23 @@ zz = zscore(sts,1,2); % along rows
 ext = zz>= ext_STD | zz<=-ext_STD;
 
 %% Registering
-ext_inds = find(ext);
-siz = size(ext);
-ext_vals = zz(ext);
-subsc = inds2subs (siz, ext_inds);
-% subsc = sortrows(subsc,1);
+    ext_inds = find(ext);
+    siz = size(ext);
+    ext_vals = zz(ext);
+    subsc = inds2subs (siz, ext_inds);
+    
+    badsubjs = cell(length(subsc),4); % 4 = parameter, name, task, value.
+    for i = 1:length(subsc)
+        badsubjs{i,1} = nms{subsc(i,1)};
+        [badsubjs{i,2}, badsubjs{i,3}] = watsubj(subsc(i,end));
+        badsubjs{i,4} = ext_vals(i);
+    end
+    badsubjs = sortrows(badsubjs,2);
+    unibads = unique({badsubjs{:,2}}');
 
-badsubjs = cell(length(subsc),4); % 4 = parameter, name, task, value.
-for i = 1:length(subsc)
-    badsubjs{i,1} = nms{subsc(i,1)};
-    [badsubjs{i,2}, badsubjs{i,3}] = watsubj(subsc(i,end));
-    badsubjs{i,4} = ext_vals(i);
-end
-badsubjs = sortrows(badsubjs,2);
-unibads = unique({badsubjs{:,2}}');
-cd(avl_outpath)
-SaveUnique('with outliers')
+
+% cd(avl_outpath)
+% SaveUnique('with outliers')
 %% iinput extreme vals!
 % [stsrow, matrix] = findinsts(12.69,sts);
 % [subj, task] = watsubj(matrix);

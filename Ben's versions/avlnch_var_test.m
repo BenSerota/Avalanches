@@ -15,6 +15,7 @@ flds = {'Parameter','P_Anov','P_corrected', 'H'};
 A = cell2struct(cell(length(params),length(flds)),flds,2);
 
 % 1. run F test, per parameter
+% Big_param_cell = cell(1,length(params)); % preallocating for large cross-run comparison
 for i = 1:length(params)
     A(i).Parameter = params{i};
     
@@ -43,9 +44,9 @@ for i = 1:length(params)
         
         BensSuperbar(Param_to_bar,3,Ps4bar,E,save_bar,avlnch_rslts,params{i},alph)
     end
+%     Big_param_cell{i}(run_count) = Param_to_bar;
     tilefigs
 end
-
 
 function Ps4bar = prepP(Pt_cor,inds)
 global conds

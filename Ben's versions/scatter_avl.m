@@ -27,7 +27,7 @@ for i = 1:length(params) % over parameters
         lowlim(ii) = min(toscatter);
     end
     plot(1:4,means)
-    title([params{i} ' per lvl of Consciousness'])
+    title([upper(params{i}) ' per lvl of Consciousness'])
     xticks(1:4)
     set(gca,'xticklabel',conds)
     xlabel('Level of Consciousness')

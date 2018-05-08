@@ -21,11 +21,12 @@ num = 30;
 lim = 30;
 
 %% avalanch [arameter values
+% 10 Time bins, 11 thresholds.
 tb_size = 1:10; 
-thresh = 3.1:.1:4; %2:.1:3;
-% thresh = 0.005;
+% thresh = 2:.1:3; %3.1:.1:4; 
+thresh = 0.005;
 pos = 2;
-% cont = 1;
+
 
 %% avlnch statistics 
 % what is a too sparse data set? below __ samples:
@@ -34,7 +35,7 @@ sprs = 30000;
 ext_STD = 4;
 
 %parameters:
-params = {'sigmas', 'alphas', 'taus', 'gammas', 'deltas', 'kappas', 'genkappas', 'Cut-Offs'};
+params = {'sigmas', 'alphas', 'taus', 'gammas', 'deltas', 'kappas', 'genkappas', 'CutOffs'};
 
 %data in sts matrix in rows:
 param_rows = [2,4,6,8,10,31,32,33];
@@ -49,4 +50,5 @@ param_rows = [2,4,6,8,10,31,32,33];
 %% testing for significance, at alpha = 
 alph = 0.05;
 
-
+% running multi analysis over condition # x ?
+cond_flag = 4;

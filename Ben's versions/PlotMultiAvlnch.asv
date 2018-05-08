@@ -1,0 +1,22 @@
+% PlotMultiAvlnch
+
+f = figure('name','Multi Avalanche Analysis');
+
+for i = 1:size(Sigmas,2) 
+figure(f)
+% scatter(Sigmas(:,i),Alphas(:,i))
+% plot(Sigmas(:,i),Alphas(:,i),'-d')
+plot3(Sigmas(:,i),Alphas(:,i),1:10,'-d') % 
+
+hold on
+end
+title('Multi Avalanche Analysis')
+xlabel('\sigma', 'fontsize',18,'FontWeight','bold')
+ylabel('\alpha','fontsize',18,'FontWeight','bold')
+zlabel('Time Bin')
+
+threshlegend  = cell(1,length(thresh));
+for i = 1:length(thresh)
+    threshlegend {i} = ['thresh = ' num2str(thresh(i))];
+end
+legend(threshlegend)
