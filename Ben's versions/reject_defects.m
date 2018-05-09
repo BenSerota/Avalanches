@@ -22,7 +22,10 @@
 spdata = sparsedata(sprs); % bads = too sparse data sets
 
 % 3. crazy recording fuck up (discovered via outlier)
-f_ups = unique(subsc(:,2)); % = f up (recording?) data sets
+% restoring subsc to original size of specific matrix
+spec_subsc = subsc;
+spec_subsc = spec_subsc(:,2) - addrows;
+f_ups = unique(spec_subsc); % = f up (recording?) data sets
 
 % assembling
 bads = [badsets ; spdata ; f_ups]; % adding sets which failed avalanche analysis (for some reason)

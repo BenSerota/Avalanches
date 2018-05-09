@@ -16,7 +16,8 @@ Avlnch_noHB_param
 cd(avlnch_rslts)
 % load AllSubj_AvlnchPrm_thresh2to3
 % load AllSubj_AvlnchPrm_thresh3to4
-load AllSubj_AvlnchPrm_thresh005
+% load AllSubj_AvlnchPrm_thresh005
+% load AllSubj_AvlnchPrm_thresh001
 load group_list
 
 %% run analysis or load data
@@ -41,22 +42,19 @@ if ~exist('sts','var')  % check if doc_avprms2sts has already run
         elseif cond_flag ~= 0
             error('cond_flag must be an integer between 0 and 4)')
         end
-         
-% for thresh = 2:.1:3
-%         [sts,nms,tsk,grp,subj,hs,phsps] = doc_avprms2sts(avprms,'all',1,10,1,0,1,mult_count,mult_count);
-% for thresh = 005
-        [sts,nms,tsk,grp,subj,hs,phsps] = doc_avprms2sts(avprms,'all',1,10,1,0,1,mult_count,mult_count);
+
+        [sts,nms,tsk,grp,subj,hs,phsps] = doc_avprms2sts(avprms,'all',tb_size(1),tb_size(end),1,0,1,mult_count,mult_count);
         
     else
-% for single run
-        [alphs,sigms,taus,gams,delts,kap,gen_kp,cos,subj,cond_subj,cond,tsk] = doc_avprms2sts_single(avprms,1,10);
+        % for single run
+        [alphs,sigms,taus,gams,delts,kap,gen_kp,cos,subj,cond_subj,cond,tsk] = doc_avprms2sts_single(avprms,1,e);
         sts = zeros(33,length(alphs));
         sts0 = cat(1,sigms,alphs,taus,gams,delts,kap,gen_kp,cos);
         sts(param_rows,:) = sts0;
         load nec_var
-
-    cd(avlnch_rslts)
-    SaveUnique('WS_Avl')
+        
+        cd(avlnch_rslts)
+        SaveUnique('WS_Avl')
     end
 end
 
@@ -70,7 +68,7 @@ register_ourliers
 reject_defects
 
 if multi_flag
-    for i = 1:length(phsps) 
+    for i = 1:length(phsps)
         phsps{i}(bads,:) = [];
     end
     sig_alph{1} = phsps{1};

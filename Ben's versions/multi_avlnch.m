@@ -7,14 +7,18 @@ global out_paths conds subconds num lim z_flag avl_outpath param_rows params mul
 DOC_basic
 Avlnch_noHB_param
 
+% number of thresholds is either 5 (default) or more. setting here: 
+if length(thresh) == 1
+    l_thresh = 5;
+else 
+    l_thresh = length(thresh);
+end
 
-[Sigmas, Alphas] = deal(nan(length(tb_size),length(thresh)));
-
+[Sigmas, Alphas] = deal(nan(l_thresh,length(tb_size)));
 run_count = 1;
-% BigStuff = cell(1,length(thresh));
 
 if multi_flag
-    for mult_count = 1:5 %length(thresh)
+    for mult_count = 1:l_thresh % over thresholds!
         
         temp = Avlnch_noHB_Gen(multi_flag,0,0); % 4 = cond 4 = ctrl
         temp = cellfun(@(x) mean(x,1), temp, 'uniformoutput', false);
@@ -22,6 +26,7 @@ if multi_flag
         %% save alphas and sigmas:
         Sigmas(:,mult_count) = temp{1}; % naturally transposes
         Alphas(:,mult_count) = temp{2};
+        fprintf('\n \n ran %g flops of avalanche analysis, out of %g \n \n', mult_count, l_thresh)
     end
 else
     ...

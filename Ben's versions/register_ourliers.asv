@@ -35,8 +35,6 @@ ext = zz>= ext_STD | zz<=-ext_STD;
         end
     end
     
-    subsc(:,2) = subsc(:,2) + addrows;
-    
     badsubjs = cell(length(subsc),4); % 4 = parameter, name, task, value.
     for i = 1:length(subsc)
         badsubjs{i,1} = nms{subsc(i,1)};

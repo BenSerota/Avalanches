@@ -21,10 +21,10 @@ num = 30;
 lim = 30;
 
 %% avalanch [arameter values
-% 10 Time bins, 11 thresholds.
-tb_size = 1:10; 
-% thresh = 2:.1:3; %3.1:.1:4; 
-thresh = 0.005;
+% 11 thresholds X 10 Time bins.
+thresh = 3.1:.1:5; % 2:.1:3;
+% thresh = 0.005;
+tb_size =  1:10; %1:5; 
 pos = 2;
 
 
@@ -53,5 +53,5 @@ alph = 0.05;
 % running multi analysis?
 multi_flag = 1;
 
-% multi analysis? over condition # ? (1/2/3/4 , 0 = all)
+% multi analysis? over condition # ? (1=VS/2=MC/3=EMC/4=CTRL , 0 = all)
 cond_flag = 4; 
