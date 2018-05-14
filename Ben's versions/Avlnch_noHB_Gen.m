@@ -8,7 +8,7 @@ function [sig_alph] = LZC_noHB_Gen (multi_flag, var_flag, scat_flag)
 close all
 clc
 start_ben
-global out_paths conds subconds num lim z_flag avl_outpath param_rows params mult_count grp cond_flag %#ok<NUSED>
+global out_paths conds subconds tb_size num lim z_flag avl_outpath param_rows params mult_count grp cond_flag %#ok<NUSED>
 DOC_basic
 Avlnch_noHB_param
 
