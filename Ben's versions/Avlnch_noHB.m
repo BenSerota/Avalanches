@@ -4,7 +4,7 @@ function avprms = Avlnch_noHB(data_frac,outname)
 % 2. calculates Avalanches parameters.
 % 3. saves output as it goes. able to continue from point at which it stopped.
 
-global out_paths subconds num lim tb_size thresh pos z_flag avl_outpath %#ok<NUSED>
+global out_paths subconds num lim tb_size thresh pos z_flag avlnch_rslts %#ok<NUSED>
 
 %% handle input
 if data_frac <= 0 || data_frac > 1
@@ -46,7 +46,7 @@ counter = 0;
 %% go
 while ~finito
     [avprms,counter] = Do1Sbj(NAMES, cnd, subj,avprms,counter, z_flag);
-    cd(avl_outpath)
+    cd(avlnch_rslts)
     save(outname)
     [cnd, subj, finito] = JacoClock(amnt_sbjcts, cnd, subj);                % advaning us in Jaco clock
 end

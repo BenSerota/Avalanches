@@ -5,8 +5,7 @@
 % how much of data to take into consideration (~(0,1))?
 data_frac = 1; %0.042; % (rate min = 0.042)
 
-% path of saved file
-avl_outpath = 'C:\Users\BenSerota\Dropbox\Ben Serota\eeg ANALYSES\results\avalanches';
+% path of saved file is 'avlnch_rslts' in DOC_basic;
 
 %% globals
 %Z scoring. 1 = per epoch, 0 = per row, concatenated all epochs
