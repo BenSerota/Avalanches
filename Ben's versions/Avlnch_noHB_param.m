@@ -19,9 +19,9 @@ num = 30;
 lim = 30;
 
 %% avalanch [arameter values
-% 11 thresholds X 10 Time bins.
+%  thresholds X Time bins.
 % thresh =  2:.1:3; %3:.1:4; %.1:.1:5; 0.005;
-thresh = 3:.1:5;
+thresh = 3:.1:4.5;
 tb_size =  1:10; %1:5;
 pos = 2;
 
@@ -63,13 +63,13 @@ end
 
 switch cond_flag
     case 1
-        out_b = 'Cond = VS_';
+        out_b = 'VS_';
     case 2
-        out_b = 'Cond = MC_';
+        out_b = 'MC_';
     case 3
-        out_b = 'Cond = EMC_';
+        out_b = 'EMC_';
     case 4
-        out_b = 'Cond = CTRL_';
+        out_b = 'CTRL_';
     case 0
         out_b = 'ALL_CONDS_';
 end

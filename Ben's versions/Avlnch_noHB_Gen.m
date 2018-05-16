@@ -6,20 +6,24 @@ function [sig_alph] = LZC_noHB_Gen (multi_flag, var_flag, scat_flag)
 % scat_flag = should we scatter individual grades? (per dataset per parammeter).
 
 close all
-clc
 start_ben
 global out_paths conds subconds tb_size num lim z_flag avlnch_rslts param_rows params mult_count grp cond_flag %#ok<NUSED>
 DOC_basic
 Avlnch_noHB_param
 
-%load aavlnch analysis?
-cd(avlnch_rslts)
-% load AllSubj_AvlnchPrm_thresh2to3
-% load AllSubj_AvlnchPrm_thresh3to4
-% load AllSubj_AvlnchPrm_thresh005
-% load AllSubj_AvlnchPrm_thresh001
-load group_list
 
+% if multi_flag && mult_count > 1 % if running multiple, don't go to disc again
+%     global avprms group_list
+% else
+    %load aavlnch analysis?
+    cd(avlnch_rslts)
+    % load AllSubj_AvlnchPrm_thresh2to3
+    % load AllSubj_AvlnchPrm_thresh3to4
+    % load AllSubj_AvlnchPrm_thresh005
+    % load AllSubj_AvlnchPrm_thresh001
+    load('NotAve_Cond = CTRL_thresh_3_5')
+    load group_list
+% end
 %% run analysis or load data
 if ~exist('avprms','var')  % check if doc_avprms2sts has already run
     cd(avlnch_rslts)
@@ -28,11 +32,22 @@ end
 
 
 %% testing resulting avlnchs stats
-% amnt_crpt = nnz([avprms.corrupt]);
-% if amnt_crpt>0
-%     disp('some rows are corrupt');
-% %     avprms(find([avprms.corrupt] == 1)) = nan?;
-% end
+if ~multi_flag || (multi_flag && mult_count == 1) % if running multiple, do this only once
+    amnt_crpt = nnz([avprms.corrupt]);
+    if amnt_crpt>0
+        fprintf('\n %g datasets are corrupt \n',amnt_crpt);
+    end
+    crpt = find([avprms.corrupt] == 1)';
+    
+    avprms = avprms([avprms.corrupt] == 0,:);
+    grp(crpt) = [];
+    amnt_sbjcts_analyzed = [...
+        length(unique([avprms(find([avprms.cond] == 1)).cond_subj])),...
+        length(unique([avprms(find([avprms.cond] == 2)).cond_subj])),...
+        length(unique([avprms(find([avprms.cond] == 3)).cond_subj])),...
+        length(unique([avprms(find([avprms.cond] == 4)).cond_subj])) ];
+    amnt_dsets_analyzed = [nnz(grp == 1),nnz(grp == 2),nnz(grp == 3),nnz(grp == 4)];
+end
 
 %% Generate statistics
 if ~exist('sts','var')  % check if doc_avprms2sts has already run
@@ -42,7 +57,7 @@ if ~exist('sts','var')  % check if doc_avprms2sts has already run
         elseif cond_flag ~= 0
             error('cond_flag must be an integer between 0 and 4)')
         end
-
+        
         [sts,nms,tsk,grp,subj,hs,phsps] = doc_avprms2sts(avprms,'all',tb_size(1),tb_size(end),1,0,1,mult_count,mult_count);
         
     else

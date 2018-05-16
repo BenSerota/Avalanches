@@ -18,14 +18,15 @@ end
 run_count = 1;
 
 if multi_flag
+    global avprms group_list
     for mult_count = 1:l_thresh % over thresholds!
         
         temp = Avlnch_noHB_Gen(multi_flag,0,0); % 4 = cond 4 = ctrl
         temp = cellfun(@(x) mean(x,1), temp, 'uniformoutput', false);
         
         %% save alphas and sigmas:
-        Sigmas(:,mult_count) = temp{1}; % naturally transposes
-        Alphas(:,mult_count) = temp{2};
+        Sigmas(mult_count,:) = temp{1}; % naturally transposes
+        Alphas(mult_count,:) = temp{2};
         fprintf('\n \n ran %g flops of avalanche analysis, out of %g \n \n', mult_count, l_thresh)
     end
 else
