@@ -11,19 +11,16 @@ global out_paths conds subconds tb_size num lim z_flag avlnch_rslts param_rows p
 DOC_basic
 Avlnch_noHB_param
 
-
-% if multi_flag && mult_count > 1 % if running multiple, don't go to disc again
-%     global avprms group_list
-% else
-    %load aavlnch analysis?
+%% load avalnche analysis?
     cd(avlnch_rslts)
-    % load AllSubj_AvlnchPrm_thresh2to3
-    % load AllSubj_AvlnchPrm_thresh3to4
-    % load AllSubj_AvlnchPrm_thresh005
-    % load AllSubj_AvlnchPrm_thresh001
-    load('NotAve_Cond = CTRL_thresh_3_5')
+%      load AllSubj_AvlnchPrm_thresh2to3
+%      load AllSubj_AvlnchPrm_thresh3to4
+%      load AllSubj_AvlnchPrm_thresh005
+%      load AllSubj_AvlnchPrm_thresh001
+%      load('NotAve_Cond = CTRL_thresh_3_5')
+load NotAve_CTRL_thresh_3_4p5
     load group_list
-% end
+
 %% run analysis or load data
 if ~exist('avprms','var')  % check if doc_avprms2sts has already run
     cd(avlnch_rslts)
@@ -36,11 +33,14 @@ if ~multi_flag || (multi_flag && mult_count == 1) % if running multiple, do this
     amnt_crpt = nnz([avprms.corrupt]);
     if amnt_crpt>0
         fprintf('\n %g datasets are corrupt \n',amnt_crpt);
+    else
+        fprintf('\n GOOD JOB there Dude! no datasets are corrupt \n');
     end
+    
     crpt = find([avprms.corrupt] == 1)';
     
-    avprms = avprms([avprms.corrupt] == 0,:);
-    grp(crpt) = [];
+    avprms = avprms([avprms.corrupt] == 0,:); % throwing away bad rows in avprms
+    grp(crpt) = []; % throwing away bad rows in grp
     amnt_sbjcts_analyzed = [...
         length(unique([avprms(find([avprms.cond] == 1)).cond_subj])),...
         length(unique([avprms(find([avprms.cond] == 2)).cond_subj])),...
