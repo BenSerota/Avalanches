@@ -3,7 +3,7 @@ clear all
 close all
 clc
 start_ben
-global out_paths conds subconds thresh tb_size num lim z_flag avlnch_rslts param_rows params mult_count grp cond_flag pos %#ok<NUSED>
+global out_paths conds subconds thresh tb_size num lim z_flag avlnch_rslts param_rows params mult_count grp cond_flag pos out_b %#ok<NUSED>
 DOC_basic
 Avlnch_noHB_param
 
@@ -21,7 +21,7 @@ if multi_flag
     global avprms group_list
     for mult_count = 1:l_thresh % over thresholds!
         
-        temp = Avlnch_noHB_Gen(multi_flag,0,0); % 4 = cond 4 = ctrl
+        temp = Avlnch_noHB_Gen(multi_flag,0,0); % (multi_flag, var_flag, scat_flag)
         temp = cellfun(@(x) mean(x,1), temp, 'uniformoutput', false);
         
         %% save alphas and sigmas:

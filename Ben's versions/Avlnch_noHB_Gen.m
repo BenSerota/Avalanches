@@ -7,7 +7,7 @@ function [sig_alph] = LZC_noHB_Gen (multi_flag, var_flag, scat_flag)
 
 close all
 start_ben
-global out_paths conds subconds tb_size num lim z_flag avlnch_rslts param_rows params mult_count grp cond_flag %#ok<NUSED>
+global out_paths conds subconds tb_size num lim z_flag avlnch_rslts param_rows params mult_count grp cond_flag out_b %#ok<NUSED>
 DOC_basic
 Avlnch_noHB_param
 
@@ -19,7 +19,7 @@ Avlnch_noHB_param
 %      load AllSubj_AvlnchPrm_thresh001
 %      load('NotAve_Cond = CTRL_thresh_3_5')
 load NotAve_CTRL_thresh_3_4p5
-    load group_list
+load group_list
 
 %% run analysis or load data
 if ~exist('avprms','var')  % check if doc_avprms2sts has already run

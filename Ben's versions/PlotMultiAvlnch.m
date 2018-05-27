@@ -31,9 +31,9 @@ for ii = [f g]
     end
     
     if ii == f
-        title(['Multi Threshold Avalanche Analysis, thresh = ' thresh4title 'NOT averaging over thresholds'])
+        title(sprintf('Avalanche Analysis on %s group, thresh = %s, NOT averaging over thresholds',out_b,thresh4title))
     else
-        title(['Multi Threshold Avalanche Analysis, thresh = ' thresh4title 'AVERAGE over thresholds' ])
+        title(sprintf('Avalanche Analysis on %s group, thresh = %s, AVERAGE over thresholds' ,out_b,thresh4title))
     end
     % xlim([0 3])
     % ylim([-3 0])

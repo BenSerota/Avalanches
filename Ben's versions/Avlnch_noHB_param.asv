@@ -76,7 +76,8 @@ end
 
 out_c = sprintf('thresh_%g_%g',thresh(1),thresh(end));
 % if thresholds contain periods: problem for file name, replace with 'p':
-out_c = strrep(out_c,'.','p');
+if mod(thresh(1),1) = 0
+    
 
 outname = [out_a out_b out_c];
 
