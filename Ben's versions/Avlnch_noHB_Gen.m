@@ -59,7 +59,8 @@ if ~exist('sts','var')  % check if doc_avprms2sts has already run
         end
         
         [sts,nms,tsk,grp,subj,hs,phsps] = doc_avprms2sts(avprms,'all',tb_size(1),tb_size(end),1,0,1,mult_count,mult_count);
-        
+        cd(avlnch_rslts)
+        SaveUnique('WS_Avl_STS')
     else
         % for single run
         [alphs,sigms,taus,gams,delts,kap,gen_kp,cos,subj,cond_subj,cond,tsk] = doc_avprms2sts_single(avprms,1,e);
@@ -69,7 +70,7 @@ if ~exist('sts','var')  % check if doc_avprms2sts has already run
         load nec_var
         
         cd(avlnch_rslts)
-        SaveUnique('WS_Avl')
+        SaveUnique('WS_Avl_STS')
     end
 end
 
