@@ -47,11 +47,11 @@ M_M_Sigmas = mean(M_Sigmas,2);
 A_Errs = std(M_Alphas,0,2)./sqrt(size(M_Alphas,2)); % STE for Alphas (Y axis)
 S_Errs = std(M_Sigmas,0,2)./sqrt(size(M_Sigmas,2)); % STE for Sigmas (X axis)
 figure()
-% plot(M_M_Sigmas,M_M_Alphas,'-o','linewidth',3)
+errorbar(M_M_Sigmas,M_M_Alphas,A_Errs,'linewidth',3)
 hold on
-errorbar(M_M_Sigmas,M_M_Alphas,A_Errs,'-o','linewidth',3)
-hold on
-errorbar(M_M_Sigmas,M_M_Alphas,S_Errs,'horizontal')
+errorbar(M_M_Sigmas,M_M_Alphas,S_Errs,'horizontal','linewidth',3)
+plot(M_M_Sigmas,M_M_Alphas,'-o','linewidth',3)
+
 %Addinglabels:
 text(M_M_Sigmas,M_M_Alphas,conds,'Fontsize',12,'FontWeight','bold')
 

@@ -36,11 +36,14 @@ if multi_flag
             
         end
     end
-else
-    ...
-end
+
 %% saving
 cd(avlnch_rslts)
 SaveUnique(sprintf('Multi_STS_%s',out_b))
 
 PlotMultiAvlnch
+PlotMeans
+
+else
+    ...
+end
