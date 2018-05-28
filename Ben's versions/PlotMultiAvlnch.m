@@ -21,48 +21,37 @@ for ii = [f g]
     plot([1 1],yylim,'black')
     
     %% aesthetics
-    if length(thresh) ~= 1
-        thresh = round(thresh);
-        thresh4title = [thresh(1), thresh(2)-thresh(1), thresh(end)];
-        thresh4title = num2str(thresh4title);
+    if l_thresh ~= 1
+        thresh4title = [thresh(1), thresh(2)-thresh(1), thresh(numel(success))];
+        thresh4title = [num2str(thresh4title(1)) ':' num2str(thresh4title(2)) ':' num2str(thresh4title(3))];
     else
-        thresh4title = num2str(thresh);
-        thresh4title = [thresh4title ' +- 0.1 STDs'];
+        thresh4title = num2str(round(thresh,1));
+        thresh4title = [thresh4title ' +- 0.2 Prcntiles'];
     end
     
     if ii == f
-        title(sprintf('Avalanche Analysis on %s group, thresh = %s, NOT averaging over thresholds',out_b,thresh4title))
+        title(sprintf('Avalanche Analysis on %s group \n thresh = %s STDs',out_b,thresh4title))
     else
-        title(sprintf('Avalanche Analysis on %s group, thresh = %s, AVERAGE over thresholds' ,out_b,thresh4title))
+        title(sprintf('Avalanche Analysis on %s group \n AVERAGE over thresholds: %s STDs' ,out_b,thresh4title))
     end
-    % xlim([0 3])
-    % ylim([-3 0])
+    
     xlabel('\sigma', 'fontsize',18,'FontWeight','bold')
     ylabel('\alpha','fontsize',18,'FontWeight','bold')
-    zlabel('Time Bin')
     
-    threshlegend  = cell(1,l_thresh);
+    threshlegend  = cell(1,length(success)); % using success and not l_thresh
     if length(thresh) == 1 % in case thresh is stated in single term (not vector)
-        for i = 1:l_thresh
-            s = (-3 + i)*0.1;
-            if s<0
-                s = [ num2str(s) 'STD'];
-            elseif s>0
-                s = ['+' num2str(s) 'STD'];
-            elseif s ==0
-                s = [];
-            end
-            
-            threshlegend {i} = sprintf('top %g percentile %s', thresh,s);
-            
+        for i = 1:length(success)
+            s = thresh + (-3 + i)*0.1;
+            threshlegend {i} = sprintf('top %g percentile', s);
         end
     else
-        
-        
-        for i = 1:l_thresh
-            threshlegend {i} = sprintf('thresh = %g', thresh(i));
+        if ii == f % no need for legend when averaging
+            for i = 1:length(success)
+                threshlegend {i} = sprintf('thresh = %g STDs', thresh(i));
+            end
+            legend(threshlegend)
         end
     end
-    legend(threshlegend)
+    
     
 end

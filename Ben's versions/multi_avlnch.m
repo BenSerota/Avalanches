@@ -14,26 +14,33 @@ else
     l_thresh = length(thresh);
 end
 
-[Sigmas, Alphas] = deal(nan(l_thresh,length(tb_size)));
+% [Sigmas, Alphas] = deal(nan(l_thresh,length(tb_size)));
+success = [];
 run_count = 1;
 
 if multi_flag
     global avprms group_list
     for mult_count = 1:l_thresh % over thresholds!
-        
+        try
         temp = Avlnch_noHB_Gen(multi_flag,0,0); % (multi_flag, var_flag, scat_flag)
         temp = cellfun(@(x) mean(x,1), temp, 'uniformoutput', false);
         
         %% save alphas and sigmas:
         Sigmas(mult_count,:) = temp{1}; % naturally transposes
         Alphas(mult_count,:) = temp{2};
-        fprintf('\n \n ran %g flops of avalanche analysis, out of %g \n \n', mult_count, l_thresh)
+        success = [success,mult_count];
+        fprintf('\n \n ran %g flops of avalanche analysis, out of %g \n \n', mult_count, l_thresh);        
+        
+        catch
+            fprintf('\n \n flop %g of avalanche analysis (threshold = %g) FAILED \n \n', mult_count, thresh(mult_count));
+            
+        end
     end
 else
     ...
 end
 %% saving
 cd(avlnch_rslts)
-SaveUnique('Multi_')
+SaveUnique(sprintf('Multi_STS_%s',out_b))
 
 PlotMultiAvlnch

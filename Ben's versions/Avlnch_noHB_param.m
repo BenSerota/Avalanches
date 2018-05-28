@@ -52,7 +52,7 @@ alph = 0.05;
 multi_flag = true;
 
 % multi analysis? over condition # ? (1=VS/2=MC/3=EMC/4=CTRL , 0 = all)
-cond_flag = 4;
+cond_flag = 3;
 
 %name of saved file
 if multi_flag
@@ -79,5 +79,3 @@ out_c = sprintf('thresh_%g_%g',thresh(1),thresh(end));
 out_c = strrep(out_c,'.','p');
 
 outname = [out_a out_b out_c];
-
-clear out_a out_b out_c
