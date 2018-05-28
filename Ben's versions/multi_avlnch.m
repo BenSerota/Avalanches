@@ -43,7 +43,7 @@ SaveUnique(sprintf('Multi_STS_%s',out_b))
 
 PlotMultiAvlnch
 PlotMeans
-
+PlotLogs
 else
     ...
 end

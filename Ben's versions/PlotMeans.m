@@ -19,7 +19,7 @@ for i = 1:4
     M_Sigmas(i,:) = tempS;
     
 end
-
+figure()
 plot(M_Sigmas',M_Alphas','-d','linewidth',3)
 
 % adding reference lines
