@@ -34,5 +34,14 @@ bads = unique(bads);
 
 
 % erasing all
+avprms(bads) = [];
 sts(:,bads) = [];
 grp(:,bads) = [];
+alphs(:,bads) = [];
+sigms(:,bads) = [];
+taus(:,bads) = [];
+gams(:,bads) = [];
+delts(:,bads) = [];
+kap(:,bads) = [];
+gen_kp(:,bads) = [];
+cos(:,bads) = [];

@@ -3,8 +3,7 @@ clear all
 close all
 clc
 start_ben
-global out_paths conds subconds thresh tb_size num lim z_flag avlnch_rslts ...
-    param_rows params mult_count grp cond_flag pos out_b LZC_flag%#ok<NUSED>
+global out_paths conds subconds thresh tb_size num lim z_flag avlnch_rslts param_rows params mult_count grp cond_flag pos out_b %#ok<NUSED>
 DOC_basic
 Avlnch_noHB_param
 
@@ -23,7 +22,7 @@ if multi_flag
     global avprms group_list
     for mult_count = 1:l_thresh % over thresholds!
         try
-            [temp, ~] = Avlnch_noHB_Gen(multi_flag,1,0); % (multi_flag, var_flag, scat_flag)
+            [temp, ~] = Avlnch_noHB_Gen(multi_flag,0,0); % (multi_flag, var_flag, scat_flag)
             temp = cellfun(@(x) mean(x,1), temp, 'uniformoutput', false);
             
             %% save alphas and sigmas:
@@ -41,18 +40,31 @@ if multi_flag
     cd(avlnch_rslts)
     SaveUnique(sprintf('Multi_STS_%s',out_b))
     
-    Plot_Multi_alphasigma
+    PlotMultiAvlnch
     PlotMeans
     
     %% looking at chosen threshold
     
+    % PlotLogs
 else
     
+
     [~, sts] = Avlnch_noHB_Gen(multi_flag,0,0); % (multi_flag, var_flag, scat_flag)
-    Avl_vartest
-    Plot_Single_alphasigma
     
+    params = deal
+    SIGMAS = sts(param_rows(1),:)';
+    ALPHAS = sts(param_rows(2),:)';
+    TAUS = sts(param_rows(3),:)';
+    GAMMAS = sts(param_rows(4),:)';
+    DELTAS = sts(param_rows(5),:)';
+    KAPPAS = sts(param_rows(6),:)';
+    GENKAPPAS = sts(param_rows(7),:)';
+    CUTOFFS = sts(param_rows(8),:)';
+    
+    
+    
+    STAT = {sts(grp == 1)',sts(grp == 2)',sts(grp == 3)',sts(grp == 4)'};
+
 end
 
-cd(avlnch_rslts)
-
+PlotSingleAvlnch

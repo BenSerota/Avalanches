@@ -49,16 +49,20 @@ param_rows = [2,4,6,8,10,31,32,33];
 alph = 0.05;
 
 % running multi analysis?
-multi_flag = true;
+multi_flag = 0;
 
+if ~multi_flag % for single thresh and tb statistics:
+    chosen_th = 5; % chosen threshold index (out of thresh)
+    chosen_tb = 1; % chosen tb (out of tb_size)
+end
 % multi analysis? over condition # ? (1=VS/2=MC/3=EMC/4=CTRL , 0 = all)
-cond_flag = 3;
+cond_flag = 0;
 
 %name of saved file
 if multi_flag
     out_a = 'NotAve_';
 else
-    out_a = 'AVE_';
+    out_a = 'Single_';
 end
 
 switch cond_flag
@@ -79,3 +83,5 @@ out_c = sprintf('thresh_%g_%g',thresh(1),thresh(end));
 out_c = strrep(out_c,'.','p');
 
 outname = [out_a out_b out_c];
+
+LZC_flag = 0; % for statistics, using BensAnovaTest. i.e. doing avalanches not LZC.
