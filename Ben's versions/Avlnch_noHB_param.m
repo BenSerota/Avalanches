@@ -85,3 +85,6 @@ out_c = strrep(out_c,'.','p');
 outname = [out_a out_b out_c];
 
 LZC_flag = 0; % for statistics, using BensAnovaTest. i.e. doing avalanches not LZC.
+
+% smoothing of loglog graphs:
+bins = 20;

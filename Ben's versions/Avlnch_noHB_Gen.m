@@ -99,10 +99,11 @@ if var_flag
     avlnch_var_test
 end
 
-Plotlogs(avprms,grp,1)
-Plotlogs(avprms,grp,2)
-Plotlogs(avprms,grp,3)
-Plotlogs(avprms,grp,4)
+Plotlogs(avprms,grp,0,bins)
+Plotlogs(avprms,grp,1,bins)
+Plotlogs(avprms,grp,2,bins)
+Plotlogs(avprms,grp,3,bins)
+Plotlogs(avprms,grp,4,bins)
 tilefigs
 
 
