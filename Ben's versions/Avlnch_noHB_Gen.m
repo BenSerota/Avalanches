@@ -96,7 +96,8 @@ if scat_flag
 end
 %% testing significance
 if var_flag
-    avlnch_var_test
+%     avlnch_var_test
+    Avl_vartest
 end
 
 Plotlogs(avprms,grp,0,bins)
